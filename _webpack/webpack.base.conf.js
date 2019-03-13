@@ -5,10 +5,22 @@ const path = require('path');
 const htmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader');
+
+console.log(commander);
+
 const server = require('./server');
+let entryFilePath = path.resolve(__dirname, dirname, './src/main.js');
+if(!fs.existsSync(entryFilePath)) {
+    let entryFilePath = path.resolve(__dirname, dirname, './src/main.js');
+}
 
 module.exports = {
-    entry: './src/index.js', // 入口文件
+    entry: {
+        lib: ['vue', 'vuex'],
+        main: './src/index.js',
+    }, // 入口文件
+
     output: {
         filename: 'main.js',    // 打包后的文件名称
         path: path.resolve(__dirname, product, 'dist')  // 打包后的目录
@@ -69,6 +81,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new VueLoaderPlugin(),
         new htmlWebpackPlugin({
             template: "./index.html",
             filename: "index.html",
@@ -89,6 +102,11 @@ module.exports = {
                 NODE_ENV: '"mock"'
             }
         }),
+        // 页面不用每次都引入这些变量
+        new webpack.ProvidePlugin({
+            Vue: ['vue', 'default'],
+            Vuex: ['vuex', 'default']
+        })
     ],
     devServer: server.devServer,
 };

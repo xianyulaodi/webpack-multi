@@ -3,8 +3,9 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
+        "dev": "node_modules/.bin/webpack --config _webpack/webpack.dev.conf.js --env.mode=dev --hide-modules --watch",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "webpack-dev-server --mode development --open",
+        "dev2": "webpack-dev-server --mode development --open",
         "build": "webpack --mode production"
     },
     "keywords": [],
@@ -33,7 +34,13 @@
         "postcss-loader": "^3.0.0",
         "style-loader": "^0.23.1",
         "url-loader": "^1.1.2",
+        "vue-loader": "^15.7.0",
         "webpack": "^4.29.5",
         "webpack-cli": "^3.2.3"
+    },
+    "dependencies": {
+        "vue": "^2.6.8",
+        "vue-router": "^3.0.2",
+        "vuex": "^3.1.0"
     }
 }
