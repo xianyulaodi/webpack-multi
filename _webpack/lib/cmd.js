@@ -1,4 +1,5 @@
-var program = require('commander');
+#!/usr/bin/env node
+let program = require('commander');
 
 program
     .version('0.1.0')
@@ -8,5 +9,6 @@ program
 
 if (program.dirname) console.log('  - dirname:' + program.dirname);
 if (program.port) console.log('  - port:' + program.port);
+
 
 module.exports = program;
