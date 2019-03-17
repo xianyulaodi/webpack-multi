@@ -4,7 +4,6 @@ const webpack = require('webpack')
 const htmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-// const { VueLoaderPlugin } = require('vue-loader');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 
@@ -14,17 +13,17 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
 
     let entryFilePath = path.resolve(cwd, `${dirname}/src/main.js`);
     if (!fs.existsSync(entryFilePath)) {
-        let entryFilePath = path.resolve(cwd, dirname, './src/main.js');
+        let entryFilePath = path.resolve(cwd, 'common/src/main.js');
     }
     return {
 
         entry: {
-            // lib: ['vue', 'vuex'],
+            lib: ['vue', 'vuex'],
             main: entryFilePath,
         }, // 入口文件
 
         output: {
-            filename: 'main.js',    // 打包后的文件名称
+            filename: '[name].js',    // 打包后的文件名称
             path: path.resolve(cwd, `${dirname}/dist`)  // 打包后的目录
         },
         module: {
@@ -90,25 +89,19 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
         plugins: [
             new VueLoaderPlugin(),
             new htmlWebpackPlugin({
-                // template: "./index.html",
                 template: path.resolve(cwd, `${dirname}/index.html`),
                 filename: "index.html",
                 inject: true,
                 hash: true,
                 chunksSortMode: 'none' //如使用webpack4将该配置项设置为'none'
             }),
-            new ExtractTextPlugin("css/styles.css"),
+            new ExtractTextPlugin("css/main.css"),
             new OptimizeCssAssetsPlugin({ // 优化css
                 cssProcessor: require('cssnano'), //引入cssnano配置压缩选项
                 cssProcessorOptions: {
                     discardComments: { removeAll: true }
                 },
                 canPrint: true //是否将插件信息打印到控制台
-            }),
-            new webpack.DefinePlugin({
-                'process.env': {
-                    NODE_ENV: '"mock"'
-                }
             }),
             // 页面不用每次都引入这些变量
             new webpack.ProvidePlugin({

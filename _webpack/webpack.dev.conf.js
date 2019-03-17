@@ -2,6 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 const merge = require('webpack-merge');
+const webpack = require('webpack');
+
+console.log(888, process.env.NODE_ENV);
 
 module.exports = (cwd, dirname = null, outpathPath = null) => {
     let baseWebpackConfig = require('./webpack.base.conf')(cwd, dirname, outpathPath);
@@ -12,6 +15,13 @@ module.exports = (cwd, dirname = null, outpathPath = null) => {
     }
     return merge(baseWebpackConfig, {
         devtool: '#cheap-module-eval-source-map',
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: '"dev"' // 注入到页面中的环境变量
+                }
+            }),
+        ]
     });
     
 }

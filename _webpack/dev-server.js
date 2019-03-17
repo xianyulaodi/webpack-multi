@@ -3,12 +3,13 @@
 'use strict'
 
 // require('./check-versions')()
-const path = require('path')
+const path = require('path');
 const commander = require('./lib/cmd');
 const product = commander.dirname;
+const port = commander.port || 3002;
 const cwd = path.resolve(__dirname, '../');
+const config = require('./config');
 
-const config = require('./config')
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
@@ -17,14 +18,11 @@ const opn = require('opn')
 const express = require('express')
 const webpack = require('webpack')
 const proxyMiddleware = require('http-proxy-middleware')
-const webpackConfig = (process.env.NODE_ENV === 'testing' || process.env.NODE_ENV === 'production')
+const webpackConfig = process.env.NODE_ENV === 'production'
     ? require('./webpack.prod.conf')
     : require('./webpack.dev.conf')(cwd, product, null)
 
-// console.log('99', webpackConfig);
-// default port where dev server listens for incoming traffic
-const port = process.env.PORT || config.dev.port
-// automatically open browser, if not set will be false
+// 是否自动打开浏览器
 const autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
@@ -42,15 +40,6 @@ const hotMiddleware = require('webpack-hot-middleware')(compiler, {
     log: false,
     heartbeat: 2000
 })
-// force page reload when html-webpack-plugin template changes
-// currently disabled until this is resolved:
-// https://github.com/jantimon/html-webpack-plugin/issues/680
-// compiler.plugin('compilation', function (compilation) {
-//   compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-//     hotMiddleware.publish({ action: 'reload' })
-//     cb()
-//   })
-// })
 
 // enable hot-reload and state-preserving
 // compilation error display
@@ -71,11 +60,9 @@ app.use(require('connect-history-api-fallback')())
 // serve webpack bundle output
 app.use(devMiddleware)
 
-// serve pure static assets
-const staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
-app.use(staticPath, express.static('./static'))
-
-const uri = 'http://localhost:' + port
+// 设置一些静态资源
+const staticPath = path.resolve(cwd, `${product}/static`);
+app.use('/static', express.static(staticPath));
 
 var _resolve
 var _reject

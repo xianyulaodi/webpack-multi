@@ -10,3 +10,5 @@
   3. 基于webpack4
 
 https://github.com/zhouyupeng/vue-mock/tree/master/build   一个简单的vue-cli参考
+
+http://blog.gejiawen.com/2016/09/21/make-a-node-cli-program-by-commander-js/

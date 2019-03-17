@@ -1,6 +1,7 @@
 <template>
   <div class="index">
-  
+   
+   
     <div v-for="(newsDate, key) in newsListShow" :key='key'>
       <section class="financial-list">
   
@@ -75,7 +76,7 @@
  
   
  
-<style scoped>
+<style lang="less" scoped>
   .topNav {
     width: 100%;
     background: #ed4040;
