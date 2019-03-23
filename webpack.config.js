@@ -5,9 +5,6 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const commander = require('./_webpack/lib/cmd');
 const product = commander.product;
 
-console.log(11, product);
-
-return;
 
 module.exports = {
     entry: './src/index.js', // 入口文件

@@ -5,7 +5,7 @@
     "scripts": {
         "dev2": "node_modules/.bin/webpack --config webpack.conf.js --env.mode=dev --hide-modules --watch",
         "dev3": "webpack --mode development",
-        "dev": "node ./_webpack/dev-server.js --dirname=demo2",
+        "dev": "node ./_webpack/dev-server.js",
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack --mode production"
     },
@@ -45,7 +45,6 @@
         "style-loader": "^0.23.1",
         "url-loader": "^1.1.2",
         "vue-loader": "^15.7.0",
-        "vue-template-compiler": "^2.6.9",
         "webpack": "^4.29.5",
         "webpack-cli": "^3.2.3",
         "webpack-dev-middleware": "^3.6.1",
@@ -53,8 +52,9 @@
         "webpack-merge": "^4.2.1"
     },
     "dependencies": {
-        "vue": "^2.6.8",
+        "vue": "^2.6.10",
         "vue-router": "^3.0.2",
+        "vue-template-compiler": "^2.6.10",
         "vuex": "^3.1.0"
     }
 }

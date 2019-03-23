@@ -4,8 +4,6 @@ const path = require('path');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
 
-console.log(888, process.env.NODE_ENV);
-
 module.exports = (cwd, dirname = null, outpathPath = null) => {
     let baseWebpackConfig = require('./webpack.base.conf')(cwd, dirname, outpathPath);
     const localWebpackConf = path.resolve(cwd, `./${dirname}/webpack.base.conf.js`);
@@ -18,7 +16,7 @@ module.exports = (cwd, dirname = null, outpathPath = null) => {
         plugins: [
             new webpack.DefinePlugin({
                 'process.env': {
-                    NODE_ENV: '"dev"' // 注入到页面中的环境变量
+                    NODE_ENV: '"dev"' // 注入到页面中的环境变量，比如用于在开发环境才引入mockjs
                 }
             }),
         ]

@@ -6,9 +6,6 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
-
-// const server = require('./server');
-
 module.exports = (cwd, dirname = null, outputPath = null) => {
 
     let entryFilePath = path.resolve(cwd, `${dirname}/src/main.js`);
