@@ -2,10 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack')
 const htmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const devMode = process.env.NODE_ENV == 'development';
 
+console.log(888, process.env.NODE_ENV);
 module.exports = (cwd, dirname = null, outputPath = null) => {
 
     let entryFilePath = path.resolve(cwd, `${dirname}/src/main.js`);
@@ -29,20 +32,29 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                     test: /\.vue$/,
                     loader: 'vue-loader'
                 },
+                // {
+                //     test: /\.css$/,
+                //     use: ExtractTextPlugin.extract({ // 拆分单独的css文件
+                //         fallback: "style-loader",
+                //         use: ['css-loader', 'postcss-loader'] // 加载css
+                //     })
+                // },
+                // // 加载less
+                // {
+                //     test: /\.less$/,
+                //     use: ExtractTextPlugin.extract({
+                //         fallback: "style-loader",
+                //         use: ['css-loader', 'postcss-loader']
+                //     })
+                // },
                 {
-                    test: /\.css$/,
-                    use: ExtractTextPlugin.extract({ // 拆分单独的css文件
-                        fallback: "style-loader",
-                        use: ['css-loader', 'postcss-loader'] // 加载css
-                    })
-                },
-                // 加载less
-                {
-                    test: /\.less$/,
-                    use: ExtractTextPlugin.extract({
-                        fallback: "style-loader",
-                        use: ['css-loader', 'postcss-loader']
-                    })
+                    test: /\.(le|c)ss$/,
+                    use: [
+                        devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+                        'css-loader',
+                        'postcss-loader',
+                        // 'sass-loader',
+                    ],
                 },
                 {
                     test: /\.(png|svg|jpg|gif)$/, // 加载图片
@@ -77,7 +89,7 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                 'vue$': 'vue/dist/vue.esm.js',
             },
             extensions: ['.js', '.json'], // 忽略文件后缀
-            modules: [
+            modules: [  // 引入模块的话，先从node_modules中查找，其次是当前产品的src下，最后是common的src下
                 path.resolve(cwd, 'node_modules'),
                 path.resolve(cwd, `${dirname}/src`),
                 path.resolve(cwd, 'common/src')
@@ -90,9 +102,20 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                 filename: "index.html",
                 inject: true,
                 hash: true,
-                chunksSortMode: 'none' //如使用webpack4将该配置项设置为'none'
+                minify: {
+                    removeComments: devMode ? false :true,
+                    collapseWhitespace: devMode ? false : true,
+                    removeAttributeQuotes: devMode ? false : true
+                },
+                chunksSortMode: 'dependency'
+                // chunksSortMode: 'none' // 如使用webpack4将该配置项设置为'none'
             }),
-            new ExtractTextPlugin("css/main.css"),
+            // new ExtractTextPlugin("css/main.css"),
+            
+            new MiniCssExtractPlugin({
+                filename: 'css/[name].css',
+                chunkFilename: '[id].css'
+            }),
             new OptimizeCssAssetsPlugin({ // 优化css
                 cssProcessor: require('cssnano'), //引入cssnano配置压缩选项
                 cssProcessorOptions: {
