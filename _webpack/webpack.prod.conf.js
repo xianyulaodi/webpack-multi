@@ -20,6 +20,11 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
     return merge(baseWebpackConfig, {
         devtool: false,
         mode: 'production',
+        // output: {
+        //     path: path.resolve(cwd, `${dirname}/dist`),
+        //     filename: utils.assetsPath('js/[name].[chunkhash].js'),
+        //     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+        // },
         optimization: {
             minimize: true
         },

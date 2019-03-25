@@ -17,11 +17,11 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
 
         entry: {
             lib: ['vue', 'vuex'],
-            main: entryFilePath,
+            main: ['webpack-hot-middleware/client?noInfo=true&reload=true', entryFilePath]
         }, // 入口文件
 
         output: {
-            filename: '[name].js',    // 打包后的文件名称
+            filename: 'js/[name].js',    // 打包后的文件名称
             path: path.resolve(cwd, `${dirname}/dist`)  // 打包后的目录
         },
         module: {

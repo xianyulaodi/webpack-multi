@@ -1,3 +1,3 @@
 export default {
-  test: 'this is an text js file'
+  test: '这里是用来测试的内容'
 }

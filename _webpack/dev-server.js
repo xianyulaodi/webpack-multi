@@ -18,9 +18,7 @@ const opn = require('opn')
 const express = require('express')
 const webpack = require('webpack')
 const proxyMiddleware = require('http-proxy-middleware')
-const webpackConfig = process.env.NODE_ENV === 'production'
-    ? require('./webpack.prod.conf')
-    : require('./webpack.dev.conf')(cwd, product, null)
+const webpackConfig = require('./webpack.dev.conf')(cwd, product, null);
 
 // 是否自动打开浏览器
 const autoOpenBrowser = !!config.dev.autoOpenBrowser
@@ -32,7 +30,7 @@ const app = express()
 const compiler = webpack(webpackConfig)
 
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
-    // publicPath: webpackConfig.output.publicPath,
+    publicPath: '/',
     quiet: true
 })
 
