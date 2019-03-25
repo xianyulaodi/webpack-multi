@@ -3,12 +3,10 @@ const path = require('path');
 const webpack = require('webpack')
 const htmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const devMode = process.env.NODE_ENV == 'development';
+const devMode = process.env.NODE_ENV == 'development'; // 是否是开发环境
 
-console.log(888, process.env.NODE_ENV);
 module.exports = (cwd, dirname = null, outputPath = null) => {
 
     let entryFilePath = path.resolve(cwd, `${dirname}/src/main.js`);
@@ -32,28 +30,12 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                     test: /\.vue$/,
                     loader: 'vue-loader'
                 },
-                // {
-                //     test: /\.css$/,
-                //     use: ExtractTextPlugin.extract({ // 拆分单独的css文件
-                //         fallback: "style-loader",
-                //         use: ['css-loader', 'postcss-loader'] // 加载css
-                //     })
-                // },
-                // // 加载less
-                // {
-                //     test: /\.less$/,
-                //     use: ExtractTextPlugin.extract({
-                //         fallback: "style-loader",
-                //         use: ['css-loader', 'postcss-loader']
-                //     })
-                // },
                 {
                     test: /\.(le|c)ss$/,
                     use: [
                         devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
                         'css-loader',
-                        'postcss-loader',
-                        // 'sass-loader',
+                        'postcss-loader'
                     ],
                 },
                 {
@@ -110,25 +92,22 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                 chunksSortMode: 'dependency'
                 // chunksSortMode: 'none' // 如使用webpack4将该配置项设置为'none'
             }),
-            // new ExtractTextPlugin("css/main.css"),
-            
             new MiniCssExtractPlugin({
                 filename: 'css/[name].css',
                 chunkFilename: '[id].css'
             }),
             new OptimizeCssAssetsPlugin({ // 优化css
-                cssProcessor: require('cssnano'), //引入cssnano配置压缩选项
+                cssProcessor: require('cssnano'), // 引入cssnano配置压缩选项
                 cssProcessorOptions: {
                     discardComments: { removeAll: true }
                 },
-                canPrint: true //是否将插件信息打印到控制台
+                canPrint: true // 是否将插件信息打印到控制台
             }),
             // 页面不用每次都引入这些变量
             new webpack.ProvidePlugin({
                 Vue: ['vue', 'default'],
                 Vuex: ['vuex', 'default']
             })
-        ],
-        // devServer: server.devServer,
+        ]
     }
 };

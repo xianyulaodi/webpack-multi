@@ -5,9 +5,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 // const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 
@@ -26,12 +24,12 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
             minimize: true
         },
         // optimization: {
-        //     // minimizer: [new UglifyJsPlugin({
-        //     //     test: /\.js(\?.*)?$/i,
-        //     //     cache: true,
-        //     //     sourceMap: true,
-        //     // })],
-        //     minimizer: true
+        //     minimizer: [
+        //         new UglifyJsPlugin({ // 编译es6会有问题
+        //             parallel: true,
+        //             sourceMap: true
+        //         })
+        //     ]
         // },
         plugins: [
             new webpack.DefinePlugin({
@@ -39,7 +37,6 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                     NODE_ENV: '"pro"' // 注入到页面中的环境变量，比如用于在开发环境才引入mockjs
                 }
             }),
-            // new ExtractTextPlugin("css/main.css"),
             new CleanWebpackPlugin({
                 default: ['dist'],
                 verbose: true,
@@ -52,27 +49,17 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
             //         discardComments: { removeAll: true }
             //     }
             // }),
-            // new HtmlWebpackPlugin({
-            //     template: path.resolve(cwd, `${dirname}/index.html`),
-            //     inject: true,
-            //     minify: {
-            //         removeComments: true,
-            //         collapseWhitespace: true,
-            //         removeAttributeQuotes: true
-            //     },
-            //     chunksSortMode: 'dependency'
-            // }),
             new CopyWebpackPlugin([
                 {
                     from: path.resolve(cwd, `${dirname}/static`),
                     to: path.resolve(cwd, `${dirname}/dist/static`),
                     ignore: ['.*']
                 },
-                {
-                    from: path.resolve(cwd, `${dirname}/index.html`),
-                    to: path.resolve(cwd, `${dirname}/dist/index.html`),
-                    ignore: ['.*']
-                }
+                // {
+                //     from: path.resolve(cwd, `${dirname}/index.html`),
+                //     to: path.resolve(cwd, `${dirname}/dist/index.html`),
+                //     ignore: ['.*']
+                // }
             ]),
         ]
     });
