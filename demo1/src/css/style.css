@@ -1,0 +1,9 @@
+.app {
+  width: 200px;
+  height: 200px;
+  margin: 100px auto;
+  background: url(~assert/star.jpg) no-repeat center top;
+  color: #fff;
+  display: flex;
+  transform: all 1s;
+}

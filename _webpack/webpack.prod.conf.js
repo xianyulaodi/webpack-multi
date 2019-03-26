@@ -6,7 +6,6 @@ const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-// const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const fs = require('fs');
 
 
@@ -47,24 +46,12 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                 verbose: true,
                 dry: false
             }),
-
-            // new OptimizeCSSPlugin({
-            //     cssProcessorOptions: {
-            //         safe: true,
-            //         discardComments: { removeAll: true }
-            //     }
-            // }),
             new CopyWebpackPlugin([
                 {
                     from: path.resolve(cwd, `${dirname}/static`),
                     to: path.resolve(cwd, `${dirname}/dist/static`),
                     ignore: ['.*']
-                },
-                // {
-                //     from: path.resolve(cwd, `${dirname}/index.html`),
-                //     to: path.resolve(cwd, `${dirname}/dist/index.html`),
-                //     ignore: ['.*']
-                // }
+                }
             ]),
         ]
     });

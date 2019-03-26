@@ -36,6 +36,7 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                         devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
                         'css-loader',
                         'postcss-loader'
+                        'less-loader'
                     ],
                 },
                 {
@@ -96,13 +97,26 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                 filename: 'css/[name].css',
                 chunkFilename: '[id].css'
             }),
-            new OptimizeCssAssetsPlugin({ // 优化css
+
+            // 优化css
+            new OptimizeCssAssetsPlugin({ 
+                ssetNameRegExp: /\.css\.*(?!.*map)/g,
                 cssProcessor: require('cssnano'), // 引入cssnano配置压缩选项
                 cssProcessorOptions: {
-                    discardComments: { removeAll: true }
+                    // autoprefixer: { 
+                    //     disable: true 
+                    // },
+                    autoprefixer: {
+                        add: true,
+                        browsers: ['> 0%', 'ie >= 8', 'op_mini > 0', 'op_mob > 0', 'and_qq > 0', 'and_uc > 0', 'Samsung > 0']
+                    },
+                    discardComments: {  // 移除注释
+                        removeAll: true
+                    }
                 },
                 canPrint: true // 是否将插件信息打印到控制台
             }),
+
             // 页面不用每次都引入这些变量
             new webpack.ProvidePlugin({
                 Vue: ['vue', 'default'],
