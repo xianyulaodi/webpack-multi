@@ -19,11 +19,6 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
     return merge(baseWebpackConfig, {
         devtool: false,
         mode: 'production',
-        // output: {
-        //     path: path.resolve(cwd, `${dirname}/dist`),
-        //     filename: utils.assetsPath('js/[name].[chunkhash].js'),
-        //     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
-        // },
         optimization: {
             minimize: true
         },
@@ -46,11 +41,12 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
                 verbose: true,
                 dry: false
             }),
+            // 复制静态资源,将static文件内的内容复制到指定文件夹
             new CopyWebpackPlugin([
                 {
                     from: path.resolve(cwd, `${dirname}/static`),
                     to: path.resolve(cwd, `${dirname}/dist/static`),
-                    ignore: ['.*']
+                    ignore: ['.*'] // 忽视.*文件
                 }
             ]),
         ]

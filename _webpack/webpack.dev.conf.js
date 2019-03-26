@@ -15,11 +15,11 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
         mode: 'development',
         devtool: '#cheap-module-eval-source-map',
         plugins: [
-            new webpack.DefinePlugin({
-                'process.env': {
-                    NODE_ENV: '"dev"' // 注入到页面中的环境变量，比如用于在开发环境才引入mockjs
-                }
-            }),
+            // new webpack.DefinePlugin({
+            //     'process.env': {
+            //         NODE_ENV: '"dev"' // 配置全局环境为开发环境，可以在页面中使用
+            //     }
+            // }),
             // 用于热加载
             new webpack.HotModuleReplacementPlugin(),
             // new webpack.NoEmitOnErrorsPlugin(),

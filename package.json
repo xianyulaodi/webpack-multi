@@ -12,10 +12,10 @@
     "author": "xianyulaodi",
     "license": "ISC",
     "description": "",
-    "browerslist": [
+    "browserslist": [
+        "> 1%",
         "last 2 versions",
-        "IE 8",
-        "UCAndroid"
+        "not ie <= 8"
     ],
     "devDependencies": {
         "@babel/core": "^7.3.4",

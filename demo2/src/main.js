@@ -5,7 +5,7 @@ import App from './App.vue';
 import router from './router';
 import axios from 'axios';
 
-if (process.env.NODE_ENV == 'dev') {
+if (process.env.NODE_ENV == 'development') {
   require('./mock/mock');
 }
 

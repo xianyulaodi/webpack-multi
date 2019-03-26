@@ -6,7 +6,7 @@
 const path = require('path');
 const commander = require('./lib/cmd');
 const product = commander.dirname;
-const port = commander.port || 3002;
+const port = commander.port || 3002; // 端口号
 const cwd = path.resolve(__dirname, '../');
 const config = require('./config');
 
@@ -14,11 +14,11 @@ if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
 
-const opn = require('opn')
+const opn = require('opn')   // 强制打开浏览器
 const express = require('express')
 const webpack = require('webpack')
 const proxyMiddleware = require('http-proxy-middleware')
-const webpackConfig = require('./webpack.dev.conf')(cwd, product, null);
+const webpackConfig = require('./webpack.dev.conf')(cwd, product, null); // webpack的配置
 
 // 是否自动打开浏览器
 const autoOpenBrowser = !!config.dev.autoOpenBrowser
@@ -27,13 +27,14 @@ const autoOpenBrowser = !!config.dev.autoOpenBrowser
 const proxyTable = config.dev.proxyTable
 
 const app = express()
-const compiler = webpack(webpackConfig)
+const compiler = webpack(webpackConfig) // webpack编译
 
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
     publicPath: '/',
     quiet: true
 })
 
+// webpack-hot-middleware的作用就是实现浏览器的无刷新更新
 const hotMiddleware = require('webpack-hot-middleware')(compiler, {
     log: false,
     heartbeat: 2000

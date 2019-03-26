@@ -1,1 +1,1 @@
-.app{width:200px;height:200px;margin:100px auto;background:url(../images/star.jpg?aa9db8eacaa83a660dbc9297d86b7a3d) no-repeat top;color:#fff;display:flex;transform:all 1s}
+.app{width:200px;height:200px;margin:100px auto;background:url(../images/star.jpg?aa9db8eacaa83a660dbc9297d86b7a3d) no-repeat top;color:#fff;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-transform:all 1s;transform:all 1s}
