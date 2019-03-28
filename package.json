@@ -3,8 +3,6 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "dev2": "node_modules/.bin/webpack --config webpack.conf.js --env.mode=dev --hide-modules --watch",
-        "dev3": "webpack --mode development",
         "dev": "node ./_webpack/dev-server.js",
         "build": "node ./_webpack/build.js"
     },
