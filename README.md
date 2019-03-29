@@ -11,7 +11,15 @@
 
 
 我们的目录结构如下：
-├到时用tree生成
+> 到时用tree生成
+
+
+在这里，我们须有有一个约定：
+1. 页面名称都为 index.html
+2. 
+入口文件都为该项目src下的main.js，
+我们的配置都放在_webpack文件夹里，如果要新建一个项目，只需要开发环境，我们执行`npm run dev --dirname=demo1`命令
+编译时，我们执行`npm run build --dirname=demo1`
 
 
 
