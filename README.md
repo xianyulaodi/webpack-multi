@@ -1,6 +1,16 @@
 # 基于webpack4.x项目实战2 - 配置一次，多个项目运行
 
-不久前，写过一篇webpack4的简单实践，传送门： [基于webpack4.x项目实战](https://juejin.im/post/5c7a9f27f265da2dca387dc9)，今天我们继续来webpack4.x的实战第二部分，只需要配置一次，就可以多个项目一起使用。
+使用：
+
+开发环境`npm run dev --dirname=demo1`
+
+打包编译：`npm run build --dirname=demo1`
+
+不久前，写过一篇webpack4的简单实践，
+
+传送门：[基于webpack4.x项目实战1-简单使用](https://juejin.im/post/5c7a9f27f265da2dca387dc9)
+
+今天我们继续来webpack4.x的实战第二部分，只需要配置一次，就可以多个项目一起使用。
 
 ## 使用场景：
 1. 非外包项目,因为外包项目一般只有一个产品
@@ -19,8 +29,21 @@
 4. 打包后的文件放在dist目录下
 
 
-我们的目录结构如下：···
-> 到时用tree生成
+我们的目录结构如下：
+```javascript
+--_webpack
+  --lib/cmd.js
+  --dev-server.js
+  --webpack.base.conf.js
+  --webpack.dev.conf.js
+  --webpack.prod.conf.js
+--common
+--demo1
+  --src
+    --main.js
+  --index.html
+--demo2
+```
 
 1. `_webpack`：用来存放webpack、node的一些配置文件，主要用来打包编译
 2. `common`：用来存放我们的一些公共文件，比如一些常用的工具脚本，常用组件等等
@@ -28,10 +51,16 @@
 
 
 开发环境：
-我们执行`npm run dev --dirname=产品名`，如`npm run dev --dirname=demo`来进行开发，如果指定端口，可以为`npm run dev --dirname=demo1 --port=8080`
+
+我们执行`npm run dev --dirname=产品名`，
+
+如`npm run dev --dirname=demo`来进行开发，如需指定端口，可以为`npm run dev --dirname=demo1 --port=8080`
 
 生产环境：
-我们执行`npm run build --dirname=产品名`，如`npm run build --dirname=demo1`来进行打包编译
+
+我们执行`npm run build --dirname=产品名`，
+
+如`npm run build --dirname=demo1`来进行打包编译
 
 ## 代码解析
 
@@ -80,6 +109,8 @@ try {
 ```
 这样，我们就可以通过`npm run dev --dirname=xxx --port=xxx`来执行我们的命令了
 
+
+
 #### 基础webpack配置 `_webpack/webpack.base.conf.js`
 
 * 入口文件
@@ -104,6 +135,8 @@ return {
 }
 ```
 我们将vue、vuex这些单独打包，入口文件为我们的`main.js`,如果项目下没有这个文件，则去寻找`common`下的`main.js`,打包后为`lib.js`和`main.js`，放在dist目录下。
+
+---
 
 * 一些loader
 
@@ -162,12 +195,16 @@ module: {
 ```
 
 1. 支持vue
-由于项目基于Vue，所以需要`vue-loader`
+
+    由于项目基于Vue，所以需要`vue-loader`
 
 2. 支持CSS
 
-加入`css-loader` 、`less-loader`(如果你们项目是用scss,也可以引入`scss-loader`)
-支持自动加css3前缀，引入了`postcss-loader`，需要和`autoprefixer`一起使用。在根目录下新建`./postcss.config.js`文件，里面的内容为
+    1) 加入`css-loader`、`less-loader`(如果你们项目是用scss,也可以引入`scss-loader`)
+
+    2) 支持自动加css3前缀
+    
+     引入了`postcss-loader`，需要和`autoprefixer`一起使用。在根目录下新建`./postcss.config.js`文件，里面的内容为
 ```javascript
 module.exports = {
     plugins: [
@@ -176,7 +213,7 @@ module.exports = {
 }
 ```
 package.json中需要这样写
-```json
+```javascript
 "browserslist": [
     "> 1%", // 值越小，支持的浏览器返回更广
     "last 2 versions",
@@ -184,14 +221,21 @@ package.json中需要这样写
 ],
 ```
 
+
+
 3. 支持图片
-引入`url-loader`来加载图片，打包后的图片放在images文件夹中，在引用图片时，自动加入hash值
+
+   引入`url-loader`来加载图片，打包后的图片放在images文件夹中，在引用图片时，自动加入hash值
 
 4. 支持es6
-引入`babel-loader`
+
+   引入`babel-loader`
 
 5. CSS优化
-引入`mini-css-extract-plugin`这个插件对生产环境的CSS进行优化，这里需要注意的是，webpack4.x建议用`mini-css-extract-plugin`替换`extract-text-webpack-plugin`
+
+   引入`mini-css-extract-plugin`这个插件对生产环境的CSS进行优化，这里需要注意的是，webpack4.x建议用`mini-css-extract-plugin`替换`extract-text-webpack-plugin`
+
+---
 
 * resolve
 ```javascript
@@ -211,12 +255,14 @@ resolve: {
     ]
 },
 ```
-* resolve中，我们创建了一些别名，支持Vue必须引入的`vue$`,省略掉js和json的后缀等等
+* resolve中，我们创建了一些别名。支持Vue必须引入的`vue$`。省略掉js和json的后缀等等
 
-* modules这里就比较好玩了，如果我们在代码中`import dialog from utils/dialog.vue`,它会先去node_modules下查找，如果没找到，则去当前项目下的src查找，如果还是没有，则去common下的src去查找,这样有什么好处呢?
+* modules这里就比较好玩了
 
-如果我们的common目录下有一个dialog.vue文件，如：`common/src/utils/dialog.vue`
-在我们的项目中，如：项目A，引用这个dialog.vue文件，是可以直接`import dialog from utils/dialog.vue`这样引入的，即使我们的项目A里面没有`utils/dialog.vue`这个文件。
+如果我们在代码中`import dialog from utils/dialog.vue`,它会先去node_modules下查找，如果没找到，则去当前项目下的src查找，如果还是没有，则去common下的src去查找,这样有什么好处呢?
+
+如果我们的common目录下有一个dialog.vue文件,如：`common/src/utils/dialog.vue`
+   在我们的项目中，如：项目A，引用这个dialog.vue文件，是可以直接`import dialog from utils/dialog.vue`这样引入的，即使我们的项目A里面没有`utils/dialog.vue`这个文件。
 ```tree
 
 --common
@@ -233,6 +279,7 @@ resolve: {
 
 这样，当我们的项目A、项目B中存在很多的公用代码，可以把公共代码放在common中，项目A或B中，只要写少许代码，就可以完成一个项目，如果项目A中的dialog.vue比较特殊，则在项目A中新建同目录下的dialog.vue文件，即可覆盖掉common的文件,这样`import dialog from utils/dialog.vue`就来自于项目A, 而不是common了。从而达到，即可通用，又可定制的效果。如果项目A中的dialog.vue文件，只有一点点和common下的不同，则在dialog.vue中，继承于common即可
 
+---
 
 * 插件
 ```javascript
@@ -427,8 +474,10 @@ rm(path.resolve(cwd, `${product}/dist`), err => {
 代码地址： [https://github.com/xianyulaodi/webpack-multi](https://github.com/xianyulaodi/webpack-multi)
 
 代码中有两个demo：
+
 demo1的webpack配置是定制的，它的入口可以为index.js,demo1也举例了引用common文件的情况
+
 demo2基于vue,支持开发环境引入mock，打包后mock移除
 
-这样，我们就完成了我们的webpack配置，只需要配置一次，多个项目公用一套配置，如果common目录下有的组件，单独项目下可以直接使用，支持单独项目覆盖掉公用组件以及覆盖掉公用webpack配置，做到既公用，又解耦。尤其适用于项目A、B、C只有少部分功能有差异的情况。
+这样，我们就完成了我们的webpack配置，只需要配置一次，多个项目公用一套配置，如果common目录下有你需要的组件，单独项目下可以直接使用，支持单独项目覆盖掉公用组件以及覆盖掉公用webpack配置，做到既公用，又解耦。尤其适用于项目A、B、C只有少部分功能有差异的情况。
 
