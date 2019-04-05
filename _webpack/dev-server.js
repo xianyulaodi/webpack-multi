@@ -1,30 +1,29 @@
-#!/usr/bin/env node
-
 'use strict'
 
-// require('./check-versions')()
 const path = require('path');
 const commander = require('./lib/cmd');
-const product = commander.dirname;
+const dirname = commander.dirname;
 const port = commander.port || 3002; // 端口号
 const cwd = path.resolve(__dirname, '../');
-const config = require('./config');
 
-if (!process.env.NODE_ENV) {
-    process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
+const opn = require('opn');   // 强制打开浏览器
+const fs = require('fs');
+const express = require('express');
+const webpack = require('webpack');
+const proxyMiddleware = require('http-proxy-middleware');
+
+let devWebpackConf = require('./webpack.dev.conf.js');
+let localWebpackConf = path.resolve(cwd, `${dirname}/webpack.dev.conf.js`);
+if (fs.existsSync(localWebpackConf)) { // 如果项目下有webpack.dev.conf,则使用该配置，覆盖掉公有的配置
+    devWebpackConf = require(localWebpackConf);
 }
-
-const opn = require('opn')   // 强制打开浏览器
-const express = require('express')
-const webpack = require('webpack')
-const proxyMiddleware = require('http-proxy-middleware')
-const webpackConfig = require('./webpack.dev.conf')(cwd, product, null); // webpack的配置
+const webpackConfig = devWebpackConf(cwd, dirname, null); // webpack的配置
 
 // 是否自动打开浏览器
-const autoOpenBrowser = !!config.dev.autoOpenBrowser
+const autoOpenBrowser = true;
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
-const proxyTable = config.dev.proxyTable
+const proxyTable = {}; // 代理
 
 const app = express()
 const compiler = webpack(webpackConfig) // webpack编译
@@ -60,7 +59,7 @@ app.use(require('connect-history-api-fallback')())
 app.use(devMiddleware)
 
 // 设置一些静态资源
-const staticPath = path.resolve(cwd, `${product}/static`);
+const staticPath = path.resolve(cwd, `${dirname}/static`);
 app.use('/static', express.static(staticPath));
 
 var _resolve

@@ -9,7 +9,7 @@ module.exports = (cwd, dirname = null, outputPath = null) => {
     const localWebpackConf = path.resolve(cwd, `./${dirname}/webpack.base.conf.js`);
     // 如果该产品目录下有webpack.base.conf.js，则使用该产品下的配置
     if (fs.existsSync(localWebpackConf)) {
-        baseWebpackConfig = require(localWebpackConf);
+        baseWebpackConfig = require(localWebpackConf)(cwd, dirname, outputPath);
     }
     return merge(baseWebpackConfig, {
         mode: 'development',

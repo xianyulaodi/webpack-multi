@@ -1,24 +1,30 @@
 'use strict'
-// require('./check-versions')()
 
-process.env.NODE_ENV = 'production';
+// process.env.NODE_ENV = 'production';
 
 const ora = require('ora'); // 终端显示的转轮loading
 const rm = require('rimraf');
 const path = require('path');
 const chalk = require('chalk');
 const commander = require('./lib/cmd');
-const product = commander.dirname;
+const dirname = commander.dirname;
 const cwd = path.resolve(__dirname, '../');
 const webpack = require('webpack');
+const fs = require('fs');
 
-const webpackConfig = require('./webpack.prod.conf')(cwd, product, null);
+
+let proWebpackConf = require('./webpack.prod.conf');
+let localWebpackConf = path.resolve(cwd, `${dirname}/webpack.pro.conf.js`);
+if (fs.existsSync(localWebpackConf)) { // 如果项目下有webpack.dev.conf,则使用该配置，覆盖掉公有的配置
+    proWebpackConf = require(localWebpackConf);
+}
+const webpackConfig = proWebpackConf(cwd, dirname, null); // webpack的配置
 
 const spinner = ora('building for production...')
 spinner.start()
 
 // 删除已编译文件
-rm(path.resolve(cwd, `${product}/dist`), err => {
+rm(path.resolve(cwd, `${dirname}/dist`), err => {
   if (err) throw err
 
   // 在删除完成的回调函数中开始编译
